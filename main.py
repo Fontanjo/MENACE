@@ -8,15 +8,49 @@ EMPTY = 0
 CROSS = 1
 CIRCLE = 2
 
+
+# Tokens to choose next move
+BLUE   = (0, 0)
+RED    = (0, 1)
+ORANGE = (0, 2)
+GREEN  = (1, 0)
+ROSE   = (1, 1)
+PURPLE = (1, 2)
+YELLOW = (2, 0)
+GREY   = (2, 1)
+BLACK  = (2, 2)
+
+BEADS = [BLUE, RED, ORANGE, GREEN, ROSE, PURPLE, YELLOW, GREY, BLACK]
+
+
+# Store list of matrice outside hash function, to avoid regenerating it every time
 list_of_h_matrices = None
 
 def main():
 	# Generate all possible positions
-	return generate_all_combinations()
+	combinations = generate_all_combinations()
 
-	# Insert initial tokens
+	# Insert initial beads (3 for each position)
+	dict_of_beads = insert_initial_beads(combinations, 3)
 
 	# Play (against self? against random?)
+	return combinations
+
+
+def insert_initial_beads(combinations, nb_of_each):
+	hash_to_beads = {}
+
+	for c in combinations:
+		standard_board = hash_to_board(c, 0)
+		bds = []
+		for bd in BEADS:
+			if standard_board[bd] == 0:
+				for _ in range(nb_of_each):
+					bds.append(bd)
+
+		hash_to_beads[c] = bds
+
+	return hash_to_beads
 
 
 # Has the board. Equivalent boards (rotated/flipped) should return the same hash
@@ -123,29 +157,47 @@ def variate_matrix(m, variation):
 
 
 	if variation == 0:
-		return m
+		res = m
 
 	if variation == 1:
-		return rotate90(m)
+		res = rotate90(m)
 
 	if variation == 2:
-		return rotate90(rotate90(m))
+		res = rotate90(rotate90(m))
 
 	if variation == 3:
-		return rotate90(rotate90(rotate90(m)))
+		res = rotate90(rotate90(rotate90(m)))
 
 	if variation == 4:
-		return hflip(m)
+		res = hflip(m)
 
 	if variation == 5:
-		return hflip(rotate90(m))
+		res = hflip(rotate90(m))
 
 	if variation == 6:
-		return hflip(rotate90(rotate90(m)))
+		res = hflip(rotate90(rotate90(m)))
 
 	if variation == 7:
-		return hflip(rotate90(rotate90(rotate90(m))))
+		res = hflip(rotate90(rotate90(rotate90(m))))
 
+	return res
+
+
+def variate_beads(bead, variation):
+	# Create empty matrix
+	m = np.zeros((3, 3))
+
+	# Insert bean at right place
+	m[bead] = 1
+
+	# Profit from existing function to find new position
+	m_v = variate_matrix(m, variation)
+
+	# Extract new position of 1 and take first instance (only 1 instance should exist)
+	for i in range(3):
+		for j in range(3):
+			if m_v[i][j] == 1:
+				return (i,j)
 
 
 # Recursive function
@@ -212,6 +264,11 @@ if __name__ == "__main__":
 	c = main()
 
 	print(len(c))
+
+	print(BLUE)
+	print(variate_beads(BLUE, 1))
+	print(variate_beads(BLUE, 2))
+	print(variate_beads(BLUE, 3))
 
 	# b = [[0, 2, 0],
 	# 	[2, 1, 2],
