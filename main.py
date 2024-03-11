@@ -18,7 +18,7 @@ list_of_h_matrices = None
 
 
 EPOCHS = 20 # At every epoch the nb of wins/draws/looses are stored
-GAMES_PER_EPOCH = 50
+GAMES_PER_EPOCH = 20
 
 NB_RESETS = 1 # Copy strategy to opponent (if menace) and reset ai
 
@@ -70,11 +70,12 @@ def main():
 			pl.set_dict(copy(dict_of_beads))
 			dict_of_beads = {}
 
-	#results = results[0::100]
 
 	# Play and print one game
 	#play_game(np.zeros((3,3)), dict_of_beads, opponent=pl, plot_game=True)
 	
+	#results = results[0::100]
+	plt.title("Menace results")
 	plt.plot([r[0] for r in results], label="wins")
 	plt.plot([r[1] for r in results], label="draw")
 	plt.plot([r[2] for r in results], label="loose")
@@ -82,10 +83,9 @@ def main():
 	
 	plt.figure()
 	plt.plot(nb_beads)
+	plt.title("Number of beads")
 	plt.show()
 
-	# Play (against self? against random?)
-	return dict_of_beads
 
 
 def play_epoch(nb_games_per_epoch, dict_of_beads, opponent):
@@ -149,17 +149,6 @@ def play_game(board, dict_of_beads, opponent, plot_game=False):
 		return -1
 
 
-# def choose_menace_move(hs, variant, dict_of_beads):
-# 	if hs not in dict_of_beads or dict_of_beads[hs] == []:
-# 		dict_of_beads[hs] = get_initial_beads(hs, INITIAL_BEADS)
-
-# 	# Get possible moves (weighted)
-# 	possible_moves = dict_of_beads[hs]
-# 	# Choose one
-# 	move = possible_moves[np.random.choice(len(possible_moves))]
-
-# 	return move
-
 def choose_opponent_move(board, strategy="menace"):
 	# TODO implement different strategies (random/last menace checkpoint/perfect/...)
 	if strategy == "random":
@@ -177,59 +166,6 @@ def choose_opponent_move(board, strategy="menace"):
 		hs, var = hash_board(board)
 		return choose_menace_move(hs, var, circle_menace_dict)
 
-
-# def draw(board):
-# 	return not win(board) and full_board(board)
-
-# def full_board(board):
-# 	# Check if there are playable positions (0s)
-# 	for i in range(3):
-# 		for j in range(3):
-# 			if board[i][j] == 0:
-# 				return False
-	
-# 	return True
-
-# def win(board):
-# 	return cross_win(board) or circle_win(board)
-
-
-# def cross_win(board):
-# 	# Not most compact way, but make it readable
-# 	for i in range(3):
-# 		if board[i][0] == CROSS and board[i][1] == CROSS and board[i][2] == CROSS:
-# 			return True
-
-# 	for j in range(3):
-# 		if board[0][j] == CROSS and board[1][j] == CROSS and board[2][j] == CROSS: 
-# 			return True
-
-# 	if board[0][0] == CROSS and board[1][1] == CROSS and board[2][2] == CROSS:
-# 		return True
-
-# 	if board[0][2] == CROSS and board[1][1] == CROSS and board[2][0] == CROSS:
-# 		return True
-	
-# 	return False
-
-
-# def circle_win(board):
-# 	# Not most compact way, but make it readable
-# 	for i in range(3):
-# 		if board[i][0] == CIRCLE and board[i][1] == CIRCLE and board[i][2] == CIRCLE:
-# 			return True
-
-# 	for j in range(3):
-# 		if board[0][j] == CIRCLE and board[1][j] == CIRCLE and board[2][j] == CIRCLE: 
-# 			return True
-
-# 	if board[0][0] == CIRCLE and board[1][1] == CIRCLE and board[2][2] == CIRCLE:
-# 		return True
-
-# 	if board[0][2] == CIRCLE and board[1][1] == CIRCLE and board[2][0] == CIRCLE:
-# 		return True
-	
-# 	return False
 
 
 def insert_initial_beads(combinations, nb_of_each):
@@ -359,35 +295,4 @@ def place_tokens(matrix, nb_crosses, nb_circles, matrices):
 
 
 if __name__ == "__main__":
-	c = main()
-
-	# print(len(c))
-
-	# print(BLUE)
-	# print(variate_beads(BLUE, 1))
-	# print(variate_beads(BLUE, 2))
-	# print(variate_beads(BLUE, 3))
-
-	# b = [[0, 2, 0],
-	# 	[2, 1, 2],
-	# 	[0, 1, 1]]
-
-	# h, v = hash_board(b)
-
-	# print("Starting board")
-	# pretty_print_matrix(b)
-
-	# print()
-
-	# print("Hash")
-	# print(f"{h} - {v}")
-
-	# print()
-
-	# print("Standard rotation")
-	# pretty_print_matrix(hash_to_board(h))
-
-	# print()
-
-	# print("Original rotation")
-	# pretty_print_matrix(hash_to_board(h, v))
+	main()
