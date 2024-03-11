@@ -2,7 +2,6 @@ import numpy as np
 from itertools import chain
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-#import seaborn as sns
 from copy import copy
 
 from players import RandomPlayer, MenacePlayer, MiniMaxPlayer
@@ -24,8 +23,6 @@ NB_RESETS = 1 # Copy strategy to opponent (if menace) and reset ai
 
 
 
-
-
 # Player 1 uses crosses, player 2 uses circles
 # Define constants for readability
 EMPTY = 0
@@ -34,16 +31,6 @@ CIRCLE = 2
 
 
 def main():
-
-	####################### Instead of generate all the combinations at the beginning
-	##  add when encountered
-	# Generate all possible positions
-#	combinations = generate_all_combinations()
-
-	# Insert initial beads (3 for each position)
-#	dict_of_beads = insert_initial_beads(combinations, INITIAL_BEADS)
-	################################################################################
-
 	if CIRCLE_STRATEGY == "random":
 		pl = RandomPlayer()
 	elif CIRCLE_STRATEGY == "menace":
@@ -87,7 +74,6 @@ def main():
 	plt.show()
 
 
-
 def play_epoch(nb_games_per_epoch, dict_of_beads, opponent):
 	wins, draws = 0, 0
 	for g in range(nb_games_per_epoch):
@@ -120,7 +106,6 @@ def play_game(board, dict_of_beads, opponent, plot_game=False):
 		# Check if menace won with last move
 		if not cross_win(board) and not full_board(board):
 			# Play opponents move
-##			#mo = choose_opponent_move(board, strategy=CIRCLE_STRATEGY)
 			mo = opponent.play(board)
 			# Play move
 			board[mo] = CIRCLE
@@ -166,56 +151,6 @@ def choose_opponent_move(board, strategy="menace"):
 		hs, var = hash_board(board)
 		return choose_menace_move(hs, var, circle_menace_dict)
 
-
-
-def insert_initial_beads(combinations, nb_of_each):
-	hash_to_beads = {}
-
-	for c in combinations:
-		# standard_board = hash_to_board(c, 0)
-		# bds = []
-		# for bd in BEADS:
-		# 	if standard_board[bd] == 0:
-		# 		for _ in range(nb_of_each):
-		# 			bds.append(bd)
-		#	
-		# hash_to_beads[c] = bds
-		hash_to_beads[c] = get_initial_beads(c, nb_of_each)
-
-	return hash_to_beads
-
-
-# def get_initial_beads(hs, nb_of_each):
-# 	standard_board = hash_to_board(hs, 0)
-# 	bds = []
-# 	for bd in BEADS:
-# 		if standard_board[bd] == 0:
-# 			for _ in range(nb_of_each):
-# 				bds.append(bd)
-
-# 	return bds
-
-
-
-# Generate all possible combinations of (valid) positions
-def generate_all_combinations():
-	# Store hash of combinations
-	combinations = []
-
-	# Starting situation
-	combinations += generate_specific_combinations(0, 0)
-	
-	# After playing
-	for i in range(1, 5):
-		combinations += generate_specific_combinations(i, i-1)
-		combinations += generate_specific_combinations(i, i)
-
-	# Case with 5 crosses and 4 circles do not need to be considered, since in this case the game is over
-	
-	# TODO remove combinations in which one player has won
-
-	
-	return combinations
 
 # Generate all possible combinations of (valid) positions with given number of crosses and circles
 def generate_specific_combinations(nb_crosses, nb_circles):
